@@ -8,7 +8,7 @@ import {
 } from './student.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
-import { boolean } from 'joi';
+
 // import validator from 'validator';
 const GuardianSchema = new Schema<Guardian>({
   fathernmae: { type: String, required: true },
@@ -32,54 +32,61 @@ const LocalGuardianSchema = new Schema<LocalGurdian>({
   address: { type: String, required: true },
 });
 
-const StudentSchema = new Schema<TStudent, StudentModel>({
-  id: { type: String, required: true, unique: true },
-  password: {
-    type: String,
-    required: [true, 'password is required'],
-    unique: true,
-    maxlength: [20, 'password canot be more than 20'],
+const StudentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: { type: String, required: true, unique: true },
+    password: {
+      type: String,
+      required: [true, 'password is required'],
+      unique: true,
+      maxlength: [20, 'password canot be more than 20'],
+    },
+    name: {
+      type: UserNameScema,
+      required: true,
+    },
+    gender: { type: String, enum: ['male', 'female'], required: true },
+    dateOfBirth: { type: String, required: true },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      // validate: {
+      //   validator: (value: string) => validator.isEmail(value),
+      //   message: '{VALUE} is not valid email',
+      // },
+    },
+    presentAddtAdress: { type: String, required: true },
+    parmanentAdress: { type: String, required: true },
+    guardian: {
+      type: GuardianSchema,
+      required: true,
+    },
+    localGuardian: {
+      type: LocalGuardianSchema,
+      required: true,
+    },
+    profileimg: { type: String },
+    isActive: {
+      type: String,
+      enum: ['active', 'blocked'],
+      required: true,
+      default: 'active',
+    },
+    isDeleted: { type: Boolean, default: false },
   },
-  name: {
-    type: UserNameScema,
-    required: true,
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  gender: { type: String, enum: ['male', 'female'], required: true },
-  dateOfBirth: { type: String, required: true },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    // validate: {
-    //   validator: (value: string) => validator.isEmail(value),
-    //   message: '{VALUE} is not valid email',
-    // },
-  },
-  presentAddtAdress: { type: String, required: true },
-  parmanentAdress: { type: String, required: true },
-  guardian: {
-    type: GuardianSchema,
-    required: true,
-  },
-  localGuardian: {
-    type: LocalGuardianSchema,
-    required: true,
-  },
-  profileimg: { type: String },
-  isActive: {
-    type: String,
-    enum: ['active', 'blocked'],
-    required: true,
-    default: 'active',
-  },
-  isDeleted: { type: Boolean, default: false },
-});
+);
 
 StudentSchema.pre('save', async function (next) {
   //
@@ -92,8 +99,22 @@ StudentSchema.pre('save', async function (next) {
   next();
 });
 
-StudentSchema.post('save', function () {
-  console.log(this, 'we will save this data');
+StudentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+StudentSchema.pre('find', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+StudentSchema.pre('findOne', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+StudentSchema.virtual('fullname').get(function () {
+  return `${this.name.firstname} ${this.name.middlename} ${this.name.lastname}`;
 });
 
 StudentSchema.statics.isUserExist = async function (id: string) {

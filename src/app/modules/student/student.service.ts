@@ -19,10 +19,20 @@ const getSingleStudentFromDB = async (id: string) => {
   return result;
 };
 
-const deleteStudentFromDb = async (id: string) => {};
+const deleteStudentFromDb = async (id: string) => {
+  const result = await Student.updateOne({ id }, { isDeleted: true });
+  return result;
+};
+
+const updateStudentDB = async (id: string, studentdsata: Partial<TStudent>) => {
+  const result = await Student.updateOne({ id }, { $set: studentdsata });
+  return result;
+};
 
 export const StudentDB = {
   createStudentIntoDB,
   getAllStudentFromDB,
   getSingleStudentFromDB,
+  deleteStudentFromDb,
+  updateStudentDB,
 };
