@@ -6,8 +6,8 @@ import {
   TStudent,
   UserNmae,
 } from './student.interface';
-import bcrypt from 'bcrypt';
-import config from '../../config';
+// import bcrypt from 'bcrypt';
+// import config from '../../config';
 
 // import validator from 'validator';
 const GuardianSchema = new Schema<Guardian>({
@@ -35,12 +35,18 @@ const LocalGuardianSchema = new Schema<LocalGurdian>({
 const StudentSchema = new Schema<TStudent, StudentModel>(
   {
     id: { type: String, required: true, unique: true },
-    password: {
-      type: String,
-      required: [true, 'password is required'],
+    user: {
+      type: Schema.ObjectId,
+      required: [true, 'User id must needed'],
       unique: true,
-      maxlength: [20, 'password canot be more than 20'],
+      ref: 'User',
     },
+    // password: {
+    //   type: String,
+    //   required: [true, 'password is required'],
+    //   unique: true,
+    //   maxlength: [20, 'password canot be more than 20'],
+    // },
     name: {
       type: UserNameScema,
       required: true,
@@ -73,12 +79,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     profileimg: { type: String },
-    isActive: {
-      type: String,
-      enum: ['active', 'blocked'],
-      required: true,
-      default: 'active',
-    },
+
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -88,21 +89,20 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
   },
 );
 
-StudentSchema.pre('save', async function (next) {
-  //
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
+// StudentSchema.pre('save', async function (next) {
+//
+//   const user = this;
+//   user.password = await bcrypt.hash(
+//     user.password,
+//     Number(config.bcrypt_salt_rounds),
+//   );
+//   next();
+// });
 
-StudentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
+// StudentSchema.post('save', function (doc, next) {
+//   doc.password = '';
+//   next();
+// });
 
 StudentSchema.pre('find', async function (next) {
   this.find({ isDeleted: { $ne: true } });
