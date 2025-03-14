@@ -21,6 +21,7 @@ export type LocalGurdian = {
 };
 export type TStudent = {
   id: string;
+  password: string;
   name: UserNmae;
   gender: 'male' | 'female';
   dateOfBirth: string;
@@ -34,6 +35,7 @@ export type TStudent = {
   localGuardian: LocalGurdian;
   profileimg?: string;
   isActive: 'active' | 'blocked';
+  isDeleted: boolean;
 };
 
 export interface StudentModel extends Model<TStudent> {

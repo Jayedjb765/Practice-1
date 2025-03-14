@@ -38,6 +38,7 @@ export const LocalGuardianSchema = z.object({
 
 const StudentSchema = z.object({
   id: z.string().min(1, { message: 'Student ID is required' }),
+  password: z.string().max(30),
   name: UserNameSchema,
   gender: z.enum(['male', 'female'], {
     message: 'Gender must be either male or female',
@@ -67,6 +68,7 @@ const StudentSchema = z.object({
       message: 'Status must be either active or blocked',
     })
     .default('active'),
+  isDeleted: z.boolean(),
 });
 
 export default StudentSchema;

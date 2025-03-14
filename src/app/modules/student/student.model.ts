@@ -6,6 +6,9 @@ import {
   TStudent,
   UserNmae,
 } from './student.interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
+import { boolean } from 'joi';
 // import validator from 'validator';
 const GuardianSchema = new Schema<Guardian>({
   fathernmae: { type: String, required: true },
@@ -31,6 +34,12 @@ const LocalGuardianSchema = new Schema<LocalGurdian>({
 
 const StudentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String, required: true, unique: true },
+  password: {
+    type: String,
+    required: [true, 'password is required'],
+    unique: true,
+    maxlength: [20, 'password canot be more than 20'],
+  },
   name: {
     type: UserNameScema,
     required: true,
@@ -69,6 +78,22 @@ const StudentSchema = new Schema<TStudent, StudentModel>({
     required: true,
     default: 'active',
   },
+  isDeleted: { type: Boolean, default: false },
+});
+
+StudentSchema.pre('save', async function (next) {
+  //
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+StudentSchema.post('save', function () {
+  console.log(this, 'we will save this data');
 });
 
 StudentSchema.statics.isUserExist = async function (id: string) {

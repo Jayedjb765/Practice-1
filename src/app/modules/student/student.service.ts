@@ -19,6 +19,8 @@ const getSingleStudentFromDB = async (id: string) => {
   return result;
 };
 
+const deleteStudentFromDb = async (id: string) => {};
+
 export const StudentDB = {
   createStudentIntoDB,
   getAllStudentFromDB,
