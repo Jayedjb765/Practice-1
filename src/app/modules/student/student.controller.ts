@@ -1,16 +1,10 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { StudentDB } from './student.service';
 import sendResponse from '../../utils/sendResponse';
 // import StudentValidationSchema from './student.joi';
 import httpstatus from 'http-status';
+import catchAync from '../../utils/catchAsync';
 
-const catchAync = (fn: RequestHandler) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch((err) => next(err));
-  };
-};
-
-const getAllStudent = catchAync(async (req, res, next) => {
+const getAllStudent = catchAync(async (req, res) => {
   const result = await StudentDB.getAllStudentFromDB();
 
   res.status(200).json({
@@ -20,7 +14,7 @@ const getAllStudent = catchAync(async (req, res, next) => {
   });
 });
 
-const getSingleStudent = catchAync(async (req, res, next) => {
+const getSingleStudent = catchAync(async (req, res) => {
   const { studentid } = req.params;
   const result = await StudentDB.getSingleStudentFromDB(studentid);
 
@@ -31,7 +25,7 @@ const getSingleStudent = catchAync(async (req, res, next) => {
     data: result,
   });
 });
-const deteStudent = catchAync(async (req, res, next) => {
+const deteStudent = catchAync(async (req, res) => {
   const { studentid } = req.params;
   const result = await StudentDB.deleteStudentFromDb(studentid);
   sendResponse(res, {
@@ -42,7 +36,7 @@ const deteStudent = catchAync(async (req, res, next) => {
   });
 });
 
-const updateStudent = catchAync(async (req, res, next) => {
+const updateStudent = catchAync(async (req, res) => {
   const { studentid } = req.params;
   const { student } = req.body;
   const result = await StudentDB.updateStudentDB(studentid, student);
