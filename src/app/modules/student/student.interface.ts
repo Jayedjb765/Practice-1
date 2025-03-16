@@ -35,6 +35,7 @@ export type TStudent = {
   guardian: Guardian;
   localGuardian: LocalGurdian;
   profileimg?: string;
+  admissionSemester: Types.ObjectId;
   isDeleted: boolean;
 };
 

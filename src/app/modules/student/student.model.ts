@@ -80,6 +80,10 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     profileimg: { type: String },
+    admissionSemester: {
+      type: Schema.ObjectId,
+      ref: 'AcademicSemester',
+    },
 
     isDeleted: { type: Boolean, default: false },
   },
