@@ -7,9 +7,10 @@ import catchAync from '../../utils/catchAsync';
 const getAllStudent = catchAync(async (req, res) => {
   const result = await StudentDB.getAllStudentFromDB();
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: httpstatus.OK,
     success: true,
-    message: 'Student is retrived Successfully',
+    message: ' Student are retrived Successfully',
     data: result,
   });
 });

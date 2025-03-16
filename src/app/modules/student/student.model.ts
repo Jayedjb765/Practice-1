@@ -6,6 +6,7 @@ import {
   TStudent,
   UserNmae,
 } from './student.interface';
+
 // import bcrypt from 'bcrypt';
 // import config from '../../config';
 
@@ -52,7 +53,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     gender: { type: String, enum: ['male', 'female'], required: true },
-    dateOfBirth: { type: String, required: true },
+    dateOfBirth: { type: Date },
     contactNo: { type: String, required: true },
     emergencyContactNo: { type: String, required: true },
     bloodGroup: {
@@ -88,21 +89,6 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
     },
   },
 );
-
-// StudentSchema.pre('save', async function (next) {
-//
-//   const user = this;
-//   user.password = await bcrypt.hash(
-//     user.password,
-//     Number(config.bcrypt_salt_rounds),
-//   );
-//   next();
-// });
-
-// StudentSchema.post('save', function (doc, next) {
-//   doc.password = '';
-//   next();
-// });
 
 StudentSchema.pre('find', async function (next) {
   this.find({ isDeleted: { $ne: true } });
