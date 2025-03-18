@@ -47,7 +47,7 @@ const updateDepertment = catchAync(async (req, res) => {
   });
 });
 
-export const FacultyController = {
+export const DepertmentController = {
   createDepertment,
   findAllDepertment,
   fingSingleDepertment,
