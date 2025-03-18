@@ -44,7 +44,7 @@ export const createStudentSchema = z.object({
       gender: z.enum(['male', 'female'], {
         message: 'Gender must be either male or female',
       }),
-      dateOfBirth: z.date().optional(),
+      dateOfBirth: z.string().optional(),
       contactNo: z.string().min(1, { message: 'Contact number is required' }),
       emergencyContactNo: z
         .string()

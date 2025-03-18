@@ -35,7 +35,7 @@ const LocalGuardianSchema = new Schema<LocalGurdian>({
 
 const StudentSchema = new Schema<TStudent, StudentModel>(
   {
-    id: { type: String, required: true, unique: true },
+    id: { type: String, required: [true, 'ID is required'], unique: true },
     user: {
       type: Schema.ObjectId,
       required: [true, 'User id must needed'],
@@ -62,7 +62,7 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Email is required'],
       unique: true,
       // validate: {
       //   validator: (value: string) => validator.isEmail(value),
@@ -81,10 +81,9 @@ const StudentSchema = new Schema<TStudent, StudentModel>(
     },
     profileimg: { type: String },
     admissionSemester: {
-      type: Schema.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',
     },
-
     isDeleted: { type: Boolean, default: false },
   },
   {
