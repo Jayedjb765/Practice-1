@@ -7,12 +7,14 @@ const createDepertmentSchemaDB = async (payload: TAcademicDepartment) => {
 };
 
 const getAllDepertmentSchemaDB = async () => {
-  const result = await AcademicDepartment.find();
+  const result = await AcademicDepartment.find().populate('academicfaculty');
   return result;
 };
 
 const getSingleDepertmentSchemaDb = async (id: string) => {
-  const result = await AcademicDepartment.findById({ _id: id });
+  const result = await AcademicDepartment.findById({ _id: id }).populate(
+    'academicfaculty',
+  );
   return result;
 };
 
