@@ -56,11 +56,36 @@ const deleteStudentFromDb = async (id: string) => {
   } catch (err) {
     await session.commitTransaction();
     await session.endSession();
+    throw new Error('Cant delete student');
   }
 };
 
 const updateStudentDB = async (id: string, payload: Partial<TStudent>) => {
-  const result = await Student.findOneAndUpdate({ id }, payload);
+  const { name, localGuardian, guardian, ...remaningStudentData } = payload;
+  const modifiedUpdatedDatta: Record<string, unknown> = {
+    ...remaningStudentData,
+  };
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedDatta[`name.${key}`] = value;
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifiedUpdatedDatta[`localGuardian.${key}`] = value;
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifiedUpdatedDatta[`guardian.${key}`] = value;
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, modifiedUpdatedDatta, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 
