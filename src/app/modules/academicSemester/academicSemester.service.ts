@@ -1,10 +1,12 @@
+import AppError from '../../errors/AppError';
 import { TAcademicSemester } from './academicSemester.interface';
 import { AcademicSemester } from './academicSemester.model';
 import { acedemicSemesternameCodeMapper } from './academicSemeter.const';
+import httpstatus from 'http-status';
 
 const createAcedemicSemeterIntoDB = async (payload: TAcademicSemester) => {
   if (acedemicSemesternameCodeMapper[payload.name] !== payload.code) {
-    throw new Error('Invalid  semester code');
+    throw new AppError(httpstatus.NOT_FOUND, 'Invalid  semester code');
   }
   const result = await AcademicSemester.create(payload);
   return result;
@@ -30,7 +32,7 @@ const updateSemesterFromDB = async (
     payload.code &&
     acedemicSemesternameCodeMapper[payload.name] !== payload.code
   ) {
-    throw new Error('Invalid semester code');
+    throw new AppError(httpstatus.NOT_FOUND, 'Invalid semester code');
   }
   const result = await AcademicSemester.findOneAndUpdate(
     { _id: id },
