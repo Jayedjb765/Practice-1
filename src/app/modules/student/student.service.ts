@@ -59,8 +59,8 @@ const deleteStudentFromDb = async (id: string) => {
   }
 };
 
-const updateStudentDB = async (id: string, studentdsata: Partial<TStudent>) => {
-  const result = await Student.updateOne({ id }, { $set: studentdsata });
+const updateStudentDB = async (id: string, payload: Partial<TStudent>) => {
+  const result = await Student.findOneAndUpdate({ id }, payload);
   return result;
 };
 
