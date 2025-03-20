@@ -5,8 +5,18 @@ import AppError from '../../errors/AppError';
 import httpstatus from 'http-status';
 import { User } from '../user/user.model';
 
-const getAllStudentFromDB = async () => {
-  const result = await Student.find()
+const getAllStudentFromDB = async (query: Record<string, unknown>) => {
+  let searchTerm = ''; // SET DEFAULT VALUE
+
+  // IF searchTerm  IS GIVEN SET IT
+  if (query?.searchTerm) {
+    searchTerm = query?.searchTerm as string;
+  }
+  const result = await Student.find({
+    $or: ['email', 'name.firstname', 'presentAddtAdress'].map((field) => ({
+      [field]: { $regex: searchTerm, $options: 'i' },
+    })),
+  })
     .populate('admissionSemester')
     .populate({
       path: 'academicDepertment',
@@ -53,10 +63,11 @@ const deleteStudentFromDb = async (id: string) => {
     await session.commitTransaction();
     await session.endSession();
     return deletedStudent;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     await session.commitTransaction();
     await session.endSession();
-    throw new Error('Cant delete student');
+    throw new Error(err);
   }
 };
 

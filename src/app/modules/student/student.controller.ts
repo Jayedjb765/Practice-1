@@ -5,7 +5,7 @@ import httpstatus from 'http-status';
 import catchAync from '../../utils/catchAsync';
 
 const getAllStudent = catchAync(async (req, res) => {
-  const result = await StudentDB.getAllStudentFromDB();
+  const result = await StudentDB.getAllStudentFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpstatus.OK,
