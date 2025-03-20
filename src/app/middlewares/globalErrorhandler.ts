@@ -2,14 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorRequestHandler } from 'express';
 import { ZodError, ZodIssue } from 'zod';
+import { Terrprsources } from '../interface/error';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Something went wrong!';
-  type Terrprsources = {
-    path: string | number;
-    message: string;
-  }[];
+
   const errorSources: Terrprsources = [
     {
       path: '',
