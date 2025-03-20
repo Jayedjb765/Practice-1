@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post(
   '/create-depertment',
-  validaterequest(FacultyValidationSchema.createFacultyValidation),
+  // validaterequest(FacultyValidationSchema.createFacultyValidation),
   DepertmentController.createDepertment,
 );
 router.patch(
