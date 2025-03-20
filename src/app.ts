@@ -16,6 +16,11 @@ app.use('/api/v1', router);
 const getAcontroller = (req: Request, res: Response) => {
   res.send('Hello World!');
 };
+const test = async (req: Request, res: Response) => {
+  const a = 10;
+  res.send(a);
+};
+app.get('/', test);
 app.get('/', getAcontroller);
 app.use(globalErrorHandler);
 app.use(notFound);
