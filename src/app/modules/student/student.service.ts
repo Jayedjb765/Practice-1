@@ -16,13 +16,7 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   // }
   // const filterquery = searchQuery
   //   .find(queryObj)
-  //   .populate('admissionSemester')
-  //   .populate({
-  //     path: 'academicDepertment',
-  //     populate: {
-  //       path: 'academicfaculty',
-  //     },
-  //   });
+
   // // SORTING FUNCTIONALITY:
   // let sort = '-createdAt'; // SET DEFAULT VALUE
   // // IF sort  IS GIVEN SET IT
@@ -48,7 +42,17 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   // }
   // const fieldsquery = await limitquery.select(fields);
   // return fieldsquery;
-  const stidentQuery = new QueryBuilder(Student.find(), query)
+  const stidentQuery = new QueryBuilder(
+    Student.find()
+      .populate('admissionSemester')
+      .populate({
+        path: 'academicDepertment',
+        populate: {
+          path: 'academicfaculty',
+        },
+      }),
+    query,
+  )
     .search(studentSearchAblefields)
     .filter()
     .sort()
