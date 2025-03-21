@@ -6,8 +6,6 @@ import httpstatus from 'http-status';
 import { User } from '../user/user.model';
 
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
-  console.log(query);
-
   const queryObj = { ...query };
 
   let searchTerm = ''; // SET DEFAULT VALUE
@@ -28,8 +26,9 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
     })),
   });
 
-  const excludeFields = ['searchTerm', 'sort', 'limit'];
+  const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
   excludeFields.forEach((el) => delete queryObj[el]);
+
   const filterquery = searchQuery
     .find(queryObj)
     .populate('admissionSemester')
@@ -64,8 +63,15 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
 
   const paginateQuery = sortQuery.skip(skip);
 
-  const limitquery = await paginateQuery.limit(limit);
-  return limitquery;
+  const limitquery = paginateQuery.limit(limit);
+  let fields = '-__v'; // SET DEFAULT VALUE
+
+  if (query.fields) {
+    fields = (query.fields as string).split(',').join(' ');
+  }
+
+  const fieldsquery = await limitquery.select(fields);
+  return fieldsquery;
 };
 
 const getSingleStudentFromDB = async (id: string) => {

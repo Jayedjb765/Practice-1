@@ -108,7 +108,7 @@ StudentSchema.pre('findOne', async function (next) {
 });
 
 StudentSchema.virtual('fullname').get(function () {
-  return `${this.name.firstname} ${this.name.middlename} ${this.name.lastname}`;
+  return `${this?.name?.firstname} ${this?.name?.middlename} ${this?.name?.lastname}`;
 });
 
 StudentSchema.statics.isUserExist = async function (id: string) {
