@@ -10,6 +10,7 @@ import { User } from './user.model';
 import { generateStudentID } from './user.utils';
 import AppError from '../../errors/AppError';
 import httpstatus from 'http-status';
+import { TFaculty } from '../Faculty/Faculty.interface';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const UserData: Partial<TUser> = {};
@@ -48,6 +49,11 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     await session.endSession();
     throw new Error(err);
   }
+};
+
+const createFaculty = async (password: string, payload: TFaculty) => {
+  const userData: Partial<TUser> = {};
+  userData.password = password || (config.default_pass as string);
 };
 
 export const UserService = {
