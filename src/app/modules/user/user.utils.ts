@@ -36,3 +36,19 @@ export const generateStudentID = async (payload: TAcademicSemester) => {
   incrementID = `${payload.year}${payload.code}${incrementID}`;
   return incrementID;
 };
+
+export const geberatedFacultyID = async () => {
+  const lastfaculty = await User.findOne(
+    {
+      role: 'faculty',
+    },
+    {
+      id: 1,
+      _id: 0,
+    },
+  )
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return lastfaculty?.id ? lastfaculty?.id.substring(2) : undefined;
+};

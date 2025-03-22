@@ -64,6 +64,7 @@ const createFaculty = async (password: string, payload: TFaculty) => {
   }
   const session = await mongoose.startSession();
   try {
+    session.startTransaction();
   } catch (err) {
     console.log(err);
   }

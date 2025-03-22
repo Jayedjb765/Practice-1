@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { TFaculty, TUserName } from './Faculty.interface';
+import { FacultyModel, TFaculty, TUserName } from './Faculty.interface';
 import { BloodGroup, Gender } from './Faculty.contant';
 
 const userNameSchema = new Schema<TUserName>({
@@ -21,7 +21,7 @@ const userNameSchema = new Schema<TUserName>({
   },
 });
 
-const facultySchema = new Schema<TFaculty>(
+const facultySchema = new Schema<TFaculty, FacultyModel>(
   {
     id: {
       type: String,
@@ -94,4 +94,4 @@ const facultySchema = new Schema<TFaculty>(
   },
 );
 
-export const FacultyModel = model<TFaculty>('Faculty', facultySchema);
+export const Faculty = model<TFaculty, FacultyModel>('Faculty', facultySchema);
