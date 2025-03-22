@@ -11,6 +11,7 @@ import { generateStudentID } from './user.utils';
 import AppError from '../../errors/AppError';
 import httpstatus from 'http-status';
 import { TFaculty } from '../Faculty/Faculty.interface';
+import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const UserData: Partial<TUser> = {};
@@ -54,8 +55,21 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 const createFaculty = async (password: string, payload: TFaculty) => {
   const userData: Partial<TUser> = {};
   userData.password = password || (config.default_pass as string);
+  userData.role = 'faculty';
+  const academicDepartment = await AcademicDepartment.findById(
+    payload.academicDepartment,
+  );
+  if (!academicDepartment) {
+    throw new AppError(400, 'Depertment not found');
+  }
+  const session = await mongoose.startSession();
+  try {
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const UserService = {
   createStudentIntoDB,
+  createFaculty,
 };
