@@ -12,6 +12,7 @@ import AppError from '../../errors/AppError';
 import httpstatus from 'http-status';
 import { TFaculty } from '../Faculty/Faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
+import { Faculty } from '../Faculty/Faculty.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const UserData: Partial<TUser> = {};
@@ -66,8 +67,23 @@ const createFaculty = async (password: string, payload: TFaculty) => {
   try {
     session.startTransaction();
     userData.id = await geberatedFacultyID();
-  } catch (err) {
-    console.log(err);
+    const newUser = await User.create([userData], { session });
+    if (!newUser.length) {
+      throw new AppError(httpstatus.BAD_REQUEST, 'Failed to create user');
+    }
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;
+    const newFaculty = await Faculty.create([payload], { session });
+    if (!newFaculty) {
+      throw new AppError(httpstatus.BAD_REQUEST, 'Failed to create faculty');
+    }
+    await session.commitTransaction();
+    await session.endSession();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
   }
 };
 
