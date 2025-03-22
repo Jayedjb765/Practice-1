@@ -7,7 +7,7 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 
 import { User } from './user.model';
-import { generateStudentID } from './user.utils';
+import { geberatedFacultyID, generateStudentID } from './user.utils';
 import AppError from '../../errors/AppError';
 import httpstatus from 'http-status';
 import { TFaculty } from '../Faculty/Faculty.interface';
@@ -65,6 +65,7 @@ const createFaculty = async (password: string, payload: TFaculty) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
+    userData.id = await geberatedFacultyID();
   } catch (err) {
     console.log(err);
   }
