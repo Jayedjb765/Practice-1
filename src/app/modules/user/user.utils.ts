@@ -37,6 +37,7 @@ export const generateStudentID = async (payload: TAcademicSemester) => {
   return incrementID;
 };
 
+// Faculty ID
 export const findLastFacultyId = async () => {
   const lastFaculty = await User.findOne(
     {
@@ -47,20 +48,24 @@ export const findLastFacultyId = async () => {
       _id: 0,
     },
   )
-    .sort({ createdAt: -1 })
+    .sort({
+      createdAt: -1,
+    })
     .lean();
 
-  return lastFaculty?.id ? lastFaculty?.id.substring(2) : undefined;
+  return lastFaculty?.id ? lastFaculty.id.substring(2) : undefined;
 };
 
-export const geberatedFacultyID = async () => {
-  let currentID = (0).toString();
+export const generateFacultyId = async () => {
+  let currentId = (0).toString();
   const lastFacultyId = await findLastFacultyId();
+
   if (lastFacultyId) {
-    currentID = lastFacultyId.substring(2);
+    currentId = lastFacultyId.substring(2);
   }
 
-  let incrementId = (Number(currentID) + 1).toString().padStart(4, '0');
+  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
+
   incrementId = `F-${incrementId}`;
 
   return incrementId;

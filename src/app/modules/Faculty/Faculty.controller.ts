@@ -1,36 +1,59 @@
-import { Types } from 'mongoose';
+import httpStatus from 'http-status';
+import catchAsync from '../../utils/catchAsync';
+import { FacultyServices } from './Faculty.service';
+import sendResponse from '../../utils/sendResponse';
 
-export type TGender = 'male' | 'female' | 'other';
-export type TBloodGroup =
-  | 'A+'
-  | 'A-'
-  | 'B+'
-  | 'B-'
-  | 'AB+'
-  | 'AB-'
-  | 'O+'
-  | 'O-';
+const getSingleFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await FacultyServices.getSingleFacultyFromDB(id);
 
-export type TUserName = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-};
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty is retrieved succesfully',
+    data: result,
+  });
+});
 
-export type TFaculty = {
-  id: string;
-  user: Types.ObjectId;
-  designation: string;
-  name: TUserName;
-  gender: TGender;
-  dateOfBirth?: Date;
-  email: string;
-  contactNo: string;
-  emergencyContactNo: string;
-  bloogGroup?: TBloodGroup;
-  presentAddress: string;
-  permanentAddress: string;
-  profileImg?: string;
-  academicDepartment: Types.ObjectId;
-  isDeleted: boolean;
+const getAllFaculties = catchAsync(async (req, res) => {
+  const result = await FacultyServices.getAllFacultiesFromDB(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculties are retrieved succesfully',
+    data: result,
+  });
+});
+
+const updateFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { faculty } = req.body;
+  const result = await FacultyServices.updateFacultyIntoDB(id, faculty);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty is updated succesfully',
+    data: result,
+  });
+});
+
+const deleteFaculty = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await FacultyServices.deleteFacultyFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Faculty is deleted succesfully',
+    data: result,
+  });
+});
+
+export const FacultyControllers = {
+  getAllFaculties,
+  getSingleFaculty,
+  deleteFaculty,
+  updateFaculty,
 };
