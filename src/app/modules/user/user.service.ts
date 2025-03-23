@@ -113,7 +113,19 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 const createAdminIntoDB = async (
   password: string,
   payload: Partial<TAdmin>,
-) => {};
+) => {
+  const userData: Partial<TUser> = {};
+
+  userData.password = password || (config.default_pass as string);
+  userData.role = 'admin';
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    userData.id = await generateAdminId();
+  } catch (err) {
+    console.log(err);
+  }
+};
 export const UserService = {
   createStudentIntoDB,
   createFacultyIntoDB,
