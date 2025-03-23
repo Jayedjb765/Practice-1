@@ -88,7 +88,7 @@ export const findAdminId = async () => {
   return lastAdmin?.id ? lastAdmin?.id.substring(2) : undefined;
 };
 
-const generateAdminId = async () => {
+export const generateAdminId = async () => {
   let currentId = (0).toString();
   const lastAdminId = await findAdminId();
   if (lastAdminId) {

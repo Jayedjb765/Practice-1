@@ -7,13 +7,18 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 
 import { User } from './user.model';
-import { generateFacultyId, generateStudentID } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentID,
+} from './user.utils';
 import AppError from '../../errors/AppError';
 import httpstatus from 'http-status';
 import { TFaculty } from '../Faculty/Faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Faculty } from '../Faculty/Faculty.model';
 import { TAdmin } from '../Admin/Admin.interface';
+import { Admin } from '../Admin/Admin.model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const UserData: Partial<TUser> = {};
@@ -122,11 +127,28 @@ const createAdminIntoDB = async (
   try {
     session.startTransaction();
     userData.id = await generateAdminId();
-  } catch (err) {
-    console.log(err);
+    const newuser = await User.create([userData], { session });
+    if (!newuser.length) {
+      throw new AppError(httpstatus.BAD_REQUEST, 'Failed to create admin');
+    }
+    payload.id = newuser[0].id;
+    payload.user = newuser[0]._id;
+    const newAdmin = await Admin.create([payload], { session });
+    if (!newAdmin) {
+      throw new AppError(httpstatus.BAD_REQUEST, 'Failed to create admin');
+    }
+    await session.commitTransaction();
+    await session.endSession();
+    return newAdmin;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(err);
   }
 };
 export const UserService = {
   createStudentIntoDB,
   createFacultyIntoDB,
+  createAdminIntoDB,
 };

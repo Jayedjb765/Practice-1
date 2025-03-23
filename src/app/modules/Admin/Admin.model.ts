@@ -97,5 +97,9 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
     },
   },
 );
+adminSchema.statics.isUserExist = async function (id: string) {
+  const existingUser = await Admin.findOne({ id });
+  return existingUser;
+};
 
 export const Admin = model<TAdmin, AdminModel>('Admin', adminSchema);
