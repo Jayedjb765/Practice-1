@@ -13,6 +13,7 @@ import httpstatus from 'http-status';
 import { TFaculty } from '../Faculty/Faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Faculty } from '../Faculty/Faculty.model';
+import { TAdmin } from '../Admin/Admin.interface';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const UserData: Partial<TUser> = {};
@@ -109,6 +110,10 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     throw new Error(err);
   }
 };
+const createAdminIntoDB = async (
+  password: string,
+  payload: Partial<TAdmin>,
+) => {};
 export const UserService = {
   createStudentIntoDB,
   createFacultyIntoDB,
