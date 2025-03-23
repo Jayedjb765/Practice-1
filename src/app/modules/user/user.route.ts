@@ -17,4 +17,5 @@ route.post(
   validaterequest(createFacultyValidationSchema),
   UserController.createFaculty,
 );
+
 export const UserRoutes = route;
