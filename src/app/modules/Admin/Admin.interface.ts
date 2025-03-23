@@ -35,5 +35,6 @@ export type TAdmin = {
 };
 
 export interface AdminModel extends Model<TAdmin> {
+  // eslint-disable-next-line no-unused-vars
   isUserExist(id: string): Promise<TAdmin | null>;
 }
