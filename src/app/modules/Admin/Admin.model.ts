@@ -97,6 +97,18 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
     },
   },
 );
+adminSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+});
+
+adminSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+adminSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
 adminSchema.statics.isUserExist = async function (id: string) {
   const existingUser = await Admin.findOne({ id });
   return existingUser;
