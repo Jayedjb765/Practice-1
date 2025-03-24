@@ -25,7 +25,9 @@ const getSingleAdmin = catchAync(async (req, res) => {
 
 const updateAdmin = catchAync(async (req, res) => {
   const { adminid } = req.params;
-  const result = await AdminServices.updateAdminIntoDB(adminid, req.body);
+  const { admin } = req.body;
+  const result = await AdminServices.updateAdminIntoDB(adminid, admin);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

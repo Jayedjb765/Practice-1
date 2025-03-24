@@ -16,8 +16,8 @@ const getAllStudent = catchAync(async (req, res) => {
 });
 
 const getSingleStudent = catchAync(async (req, res) => {
-  const { studentid } = req.params;
-  const result = await StudentDB.getSingleStudentFromDB(studentid);
+  const { id } = req.params;
+  const result = await StudentDB.getSingleStudentFromDB(id);
 
   sendResponse(res, {
     statusCode: httpstatus.OK,
@@ -27,8 +27,8 @@ const getSingleStudent = catchAync(async (req, res) => {
   });
 });
 const deteStudent = catchAync(async (req, res) => {
-  const { studentid } = req.params;
-  const result = await StudentDB.deleteStudentFromDb(studentid);
+  const { id } = req.params;
+  const result = await StudentDB.deleteStudentFromDb(id);
   sendResponse(res, {
     statusCode: httpstatus.OK,
     success: true,
@@ -38,9 +38,9 @@ const deteStudent = catchAync(async (req, res) => {
 });
 
 const updateStudent = catchAync(async (req, res) => {
-  const { studentid } = req.params;
+  const { id } = req.params;
   const { student } = req.body;
-  const result = await StudentDB.updateStudentDB(studentid, student);
+  const result = await StudentDB.updateStudentDB(id, student);
   sendResponse(res, {
     statusCode: httpstatus.OK,
     success: true,
