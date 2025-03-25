@@ -10,4 +10,6 @@ route.post(
   validaterequest(CourseValidations.createCourseValidationSchema),
   CourseControllers.createCourse,
 );
+route.get('/', CourseControllers.getAllCourses);
+route.get('/:id', CourseControllers.getAllCourses);
 export const CourseRoutes = route;
