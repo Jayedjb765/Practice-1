@@ -31,6 +31,17 @@ const getSingleCourse = catchAync(async (req, res) => {
     data: result,
   });
 });
+
+const updateCcourse = catchAync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CourseServices.updateCourseIntoDB(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Single Course is retrieved succesfully',
+    data: result,
+  });
+});
 export const CourseControllers = {
   createCourse,
   getAllCourses,
