@@ -46,8 +46,8 @@ const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
   }
 };
 
-const deleteCou = async (id: string) => {
-  const result = await Course.findByIdAndDelete(id);
+const deleteCouseFromDb = async (id: string) => {
+  const result = await Course.findByIdAndUpdate(id);
   return result;
 };
 
